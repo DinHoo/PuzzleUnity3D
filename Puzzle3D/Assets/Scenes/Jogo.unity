@@ -398,9 +398,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733adaa3ba43a284f907a22319d2db64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 1106525166}
-  Player: {fileID: 1012915202}
-  Obstruction: {fileID: 0}
+  target: {fileID: 1106525166}
+  player: {fileID: 1012915202}
+  obstruction: {fileID: 0}
   obstructionMaterial: {fileID: 0}
 --- !u!1 &1012915196
 GameObject:
@@ -436,6 +436,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 3
+  jumpVelocity: 5.66
+  correndo: 0
+  estaNoSolo: 0
 --- !u!54 &1012915198
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -662,7 +665,7 @@ GameObject:
   - component: {fileID: 1854483267}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Solo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

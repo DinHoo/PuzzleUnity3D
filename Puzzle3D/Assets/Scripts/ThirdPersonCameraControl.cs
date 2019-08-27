@@ -5,17 +5,17 @@ using UnityEngine;
 public class ThirdPersonCameraControl : MonoBehaviour
 {
     float rotationSpeed = 1;
-    public Transform Target, Player;
+    public Transform target, player;
     float mouseX, mouseY;
 
-    public Transform Obstruction;
+    public Transform obstruction;
     float zoomSpeed = 2f;
 
     public Material obstructionMaterial;
     
     void Start()
     {
-        Obstruction = Target;
+        obstruction = target;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -33,17 +33,17 @@ public class ThirdPersonCameraControl : MonoBehaviour
         mouseY -= Input.GetAxis("Mouse Y") * rotationSpeed;
         mouseY = Mathf.Clamp(mouseY, -35, 60);
 
-        transform.LookAt(Target);
+        transform.LookAt(target);
 
         if (Input.GetMouseButton(1))
         {
-            Target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+            target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
             
         }
         else
         {
-            Player.rotation = Quaternion.Euler(0, mouseX, 0);
-            Target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
+            player.rotation = Quaternion.Euler(0, mouseX, 0);
+            target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
             
         }
     }
@@ -53,25 +53,25 @@ public class ThirdPersonCameraControl : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, Target.position - transform.position, out hit, 4.5f))
+        if (Physics.Raycast(transform.position, target.position - transform.position, out hit, 4.5f))
         {
             
             if (hit.collider.gameObject.tag != "Player")
             {
-                if(Obstruction)
+                if(obstruction)
                 {
-                    if(Obstruction != hit.transform)
+                    if(obstruction != hit.transform)
                     {
-                        Obstruction = hit.transform;
-                        obstructionMaterial = Obstruction.gameObject.GetComponent<MeshRenderer>().sharedMaterial;
+                        obstruction = hit.transform;
+                        obstructionMaterial = obstruction.gameObject.GetComponent<MeshRenderer>().sharedMaterial;
                         //Obstruction.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
                         print(obstructionMaterial.name + " " + obstructionMaterial.color);
 
-                        Utillities.ChangeRenderMode(Obstruction.gameObject.GetComponent<MeshRenderer>().material, Utillities.BlendMode.Transparent);
+                        Utillities.ChangeRenderMode(obstruction.gameObject.GetComponent<MeshRenderer>().material, Utillities.BlendMode.Transparent);
                         Color transparent = new Color(0, 0, 0, 0);
-                        Obstruction.gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", transparent);
+                        obstruction.gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color", transparent);
 
-                        if (Vector3.Distance(Obstruction.position, transform.position) >= 3f && Vector3.Distance(transform.position, Target.position) >= 1.5f)
+                        if (Vector3.Distance(obstruction.position, transform.position) >= 3f && Vector3.Distance(transform.position, target.position) >= 1.5f)
                             transform.Translate(Vector3.forward * zoomSpeed * Time.deltaTime);
                     }
                 }
@@ -79,13 +79,13 @@ public class ThirdPersonCameraControl : MonoBehaviour
             }
             else
             {
-                if(Obstruction.gameObject.GetComponent<MeshRenderer>())
+                if(obstruction.gameObject.GetComponent<MeshRenderer>())
                 {
                     //Obstruction.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-                    Obstruction.gameObject.GetComponent<MeshRenderer>().material = obstructionMaterial;
-                    if (Vector3.Distance(transform.position, Target.position) < 4.5f)
+                    obstruction.gameObject.GetComponent<MeshRenderer>().material = obstructionMaterial;
+                    if (Vector3.Distance(transform.position, target.position) < 4.5f)
                         transform.Translate(Vector3.back * zoomSpeed * Time.deltaTime);
-                    Obstruction = Target;
+                    obstruction = target;
 
                 }
 
