@@ -1,68 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ThirdPersonCharacterControl : MonoBehaviour
 {
-    [SerializeField]
-    float Speed;
-    [SerializeField]
-    [Range(1, 10)]
-    float jumpVelocity;
-    [SerializeField]
-    bool correndo;
-    [SerializeField]
-    bool estaNoSolo;
+    public float speed = 6.0F;
+    public float gravity = -50.0F;
+    public float jumpHigh = 8.0F;
+    public float velocityY;
 
 
-    void Update ()
+    private Vector3 moveDirection = Vector3.zero;
+    public CharacterController controller;
+
+    private void Start()
     {
-        PlayerMovement();
-        PlayerJump();
+        // Store reference to attached component
+        controller = GetComponent<CharacterController>();
     }
 
-    void PlayerMovement()
+    private void Update()
     {
-        float hor = Input.GetAxis("Horizontal");
-        float ver = Input.GetAxis("Vertical");
+        Movimento();
+    }
 
+    private void Movimento()
+    {
+        // Character is on ground (built-in functionality of Character Controller)
 
-        Vector3 playerMovement;
-        if (Input.GetKey(KeyCode.LeftShift))
+        // Use input up and down for direction, multiplied by speed
+        moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        moveDirection = transform.TransformDirection(moveDirection);
+        if(Input.GetKey(KeyCode.LeftShift))
         {
-            playerMovement = new Vector3(hor, 0f, ver) * (Speed*2) * Time.deltaTime;
-            correndo = true;
+            moveDirection *= speed*2;
         }
         else
         {
-            playerMovement = new Vector3(hor, 0f, ver) * Speed * Time.deltaTime;
-            correndo = false;
+            moveDirection *= speed;
 
         }
-        transform.Translate(playerMovement, Space.Self);
 
-    }
-
-    void PlayerJump()
-    {
-        if(Input.GetButton("Jump") && estaNoSolo)
+        if(Input.GetButton("Jump") && controller.isGrounded)
         {
-            estaNoSolo = false;
-            //Vector3 aux = GetComponent<Rigidbody>().velocity;
-            //aux.y = 0;
-            //GetComponent<Rigidbody>().velocity = aux;
-            GetComponent<Rigidbody>().velocity += Vector3.up * jumpVelocity;
-            
+            velocityY = Mathf.Sqrt(-2 * gravity * jumpHigh); ;
+            print("pulo");
         }
-    }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.CompareTag("Solo"))
+        
+
+        // Apply gravity manually.
+        velocityY += gravity * Time.deltaTime;
+        // Move Character Controller
+        controller.Move((moveDirection + Vector3.up*velocityY) * Time.deltaTime);
+
+        if (controller.isGrounded)
         {
-            estaNoSolo = true;
+            velocityY = 0;
         }
     }
-
-    
 }
