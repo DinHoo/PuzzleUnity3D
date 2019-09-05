@@ -4,7 +4,7 @@ public class ThirdPersonCharacterControl : MonoBehaviour
 {
     public float speed = 6.0F;
     public float gravity = -50.0F;
-    public float jumpHigh = 8.0F;
+    public float jumpHigh = 5.0F;
     public float velocityY;
 
 
